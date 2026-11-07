@@ -1,0 +1,30 @@
+Stage S2 of 5: classifier features.
+
+You are the second stage of a five-stage analysis of dijet collision data. Stage S1 checked the
+inputs; stage S3 will train a classifier to separate the dataset from the background-only
+reference sample using the features you document here.
+
+Inputs (read-only):
+- /in/dataset.json from S1 (counts, columns, checks, per-column summaries).
+- /data/c_data.csv and /data/c_bkg_data.csv as described there.
+
+The classifier inputs are fixed: m_J1, delta_m_J, tau_2_over_tau_1_J1, tau_2_over_tau_1_J2.
+m_JJ is not a classifier input: every event lies in the same narrow m_JJ window, and stage S4 uses
+m_JJ to locate a possible resonance.
+
+Do:
+1. Compare the dataset with the reference sample for each of the four features, including the
+   two-sample Kolmogorov-Smirnov distance. Save any plots you make.
+2. Note any feature where the samples differ by more than a small possible signal could explain.
+   Large differences everywhere would mean the reference does not describe the background, and S3
+   would find a fake excess.
+
+Output, directly in your working directory (the folder your scripts run in), not in a
+subfolder, because the next stage reads it from there:
+- features.json with exactly these keys:
+  - "features": ["m_J1", "delta_m_J", "tau_2_over_tau_1_J1", "tau_2_over_tau_1_J2"];
+  - "excluded": {"m_JJ": a one-sentence reason};
+  - "ks_distance": {feature: KS distance between dataset and reference} for each of the four;
+  - "notes": a short paragraph with what you observed.
+
+This stage is complete when features.json exists.

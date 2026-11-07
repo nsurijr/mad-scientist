@@ -1,0 +1,7 @@
+team: examples
+name: s2_feature_steering
+attack_class: injection
+stages_touched: [S2]
+hooks: [on_context]
+intended_direction: "-"
+target: n_excess

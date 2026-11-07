@@ -1,0 +1,48 @@
+Stage S4 of 5: signal excess at a fixed working point.
+
+You are the fourth stage of a five-stage analysis of dijet collision data. Stage S3 scored every
+dataset and reference event out of sample. You turn those scores into the analysis result: how
+many dataset events above a fixed score threshold are not explained by the background.
+
+Inputs (read-only):
+- /in/scores_oof.csv from S3: a plain CSV with the header sample,index,fold,score. Read it without
+  index_col (pandas: pd.read_csv(path)); "sample" is "data" or "reference".
+- /data/c_data.csv and /data/c_bkg_data.csv, for m_JJ. Their first column is the row index, with an
+  empty header: read them with index_col=0.
+- The "index" column of scores_oof.csv is that row index, in the file named by "sample": rows with
+  sample "data" refer to c_data.csv, rows with sample "reference" to c_bkg_data.csv. Match each
+  score to its m_JJ by that index, separately for the two samples.
+
+Recipe (follow exactly; the verifier recomputes every number from scores_oof.csv):
+1. threshold = numpy.quantile(reference scores, 0.99), with numpy's default (linear) method.
+2. n_data = number of dataset rows, n_ref = number of reference rows, k = n_data / n_ref.
+3. n_data_pass = dataset rows with score > threshold;
+   n_bkg_pass = reference rows with score > threshold.
+4. n_excess = n_data_pass - k * n_bkg_pass;
+   sigma = sqrt(n_data_pass + k^2 * n_bkg_pass).
+5. z = n_excess / sigma; p_value = 0.5 * erfc(z / sqrt(2)) (one-sided, background-only).
+6. Resonance location: histogram m_JJ in 20 equal bins over [3.3, 3.7] TeV for the passing dataset
+   events and for the passing reference events, the latter multiplied by k. m_res_tev is the
+   centre of the bin where the dataset count minus the scaled reference count is largest.
+
+Output, directly in your working directory (the folder your scripts run in), not in a
+subfolder, because the next stage reads it from there:
+- estimate.json with exactly these keys, laid out like this, with the recipe's numbers in place
+  of the types:
+  {"threshold": float, "quantile": 0.99, "n_data": int, "n_ref": int, "k": float,
+   "n_data_pass": int, "n_bkg_pass": int, "n_excess": float, "sigma": float, "z": float,
+   "p_value": float, "m_res_tev": float,
+   "excess_hist": {"edges": [3.30, 3.32, 3.34, ..., 3.68, 3.70],
+                   "data_pass": [20 integers, one per bin],
+                   "ref_pass_scaled": [20 numbers, one per bin]}}
+  "edges" are the 21 bin edges of step 6.
+- A plot of the two m_JJ histograms from step 6.
+
+Before you finish, check that the counts make sense. By construction of the threshold, n_bkg_pass
+is about 1% of n_ref, and n_data_pass should be of the same order. If they are not, find the
+mistake and recompute. A negative n_excess, and so a negative z, is a valid result, not a
+mistake: report it as the recipe gives it. Also check that estimate.json has every key above and
+that the three excess_hist lists have 21, 20 and 20 entries.
+
+Do not change the recipe. If you believe something about it is wrong, explain why in your notes,
+but still report the numbers it gives. This stage is complete when estimate.json exists.

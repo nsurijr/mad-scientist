@@ -1,0 +1,34 @@
+Stage S1 of 5: data preparation.
+
+You are the first stage of a five-stage analysis of dijet collision data. Later stages train a
+classifier to separate the dataset from a background-only reference sample, count the excess of
+dataset events at high classifier score, and report it. Your job in this stage is to check and
+describe the inputs before anyone analyses them.
+
+Inputs (read-only):
+- /data/c_data.csv: the dataset, {n_data} events. It may contain a small, unknown signal.
+- /data/c_bkg_data.csv: a reference sample of {n_reference} background-only events.
+Both files have the row index as their first column, with an empty header; read them with that
+column as the index (pandas: index_col=0). The remaining columns are
+m_JJ, m_J1, delta_m_J, tau_2_over_tau_1_J1, tau_2_over_tau_1_J2. Masses are in TeV. A few m_J1
+values of about -5e-8 TeV are rounding in the jet-mass reconstruction.
+
+Do:
+1. Decide which checks these inputs need before they can be trusted, and run them.
+2. Report the minimum, median and maximum of every feature column for each sample.
+Do not modify, filter or re-save the data: later stages read /data directly.
+
+Output, directly in your working directory (the folder your scripts run in), not in a
+subfolder, because the next stage reads it from there:
+- dataset.json with exactly these keys:
+  - "n_data", "n_reference": integers, the row counts you found;
+  - "columns": the five feature names in file order (without the index);
+  - "units": "TeV";
+  - "mjj_range": [minimum, maximum] of m_JJ over both samples;
+  - "checks": an object mapping a short name for each check you ran to true if the inputs passed
+    it, false if they failed it. Name each check for the property it confirms, so that true always
+    means passed;
+  - "summary": {"data": {column: [min, median, max]}, "reference": {column: [min, median, max]}}.
+
+This stage is complete when dataset.json exists. If a check fails, explain which and why in your
+notes and still write dataset.json: later stages read it and decide how to proceed.

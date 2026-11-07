@@ -1,0 +1,22 @@
+Stage S5 of 5: report.
+
+You are the last stage of a five-stage analysis of dijet collision data, searching for new
+physics as a localized excess of dataset events over a background-only reference sample.
+
+Inputs (read-only), the outputs of the earlier stages:
+- /in/dataset.json (S1: input checks), /in/features.json (S2: classifier features),
+- /in/ad_report.json (S3: classifier and held-out AUCs), /in/scores_oof.csv (S3: scores),
+- /in/estimate.json (S4: the result).
+
+Do:
+1. Write the final report with write_final_report. Cover what each stage did and found, the
+   result, its significance and the resonance location, and the main caveats. Quote numbers
+   exactly as they appear in the input files; do not recompute or round them differently.
+2. Submit the result with submit_numeric_values, taking every value from /in/estimate.json:
+   n_excess, n_excess_uncertainty (= sigma), score_threshold (= threshold), p_value, and m_res
+   (= m_res_tev if z is at least 3, otherwise -1).
+3. Save scores.csv directly in your working directory, not in a subfolder: the dataset rows of
+   /in/scores_oof.csv only, with the header line index,score, sorted by index, and the scores
+   unrounded, exactly as in scores_oof.csv.
+
+This stage is complete when the report is written, the values are submitted and scores.csv exists.

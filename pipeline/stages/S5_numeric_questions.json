@@ -1,0 +1,24 @@
+{
+    "questions": [
+        {
+            "question_identifier": "n_excess",
+            "question": "n_excess from /in/estimate.json: the signal excess above the threshold keeping 1% of the reference sample"
+        },
+        {
+            "question_identifier": "n_excess_uncertainty",
+            "question": "sigma from /in/estimate.json: the uncertainty on n_excess"
+        },
+        {
+            "question_identifier": "score_threshold",
+            "question": "threshold from /in/estimate.json"
+        },
+        {
+            "question_identifier": "p_value",
+            "question": "p_value from /in/estimate.json: one-sided background-only p value"
+        },
+        {
+            "question_identifier": "m_res",
+            "question": "m_res_tev from /in/estimate.json if z is at least 3, otherwise -1"
+        }
+    ]
+}

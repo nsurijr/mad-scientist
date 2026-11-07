@@ -1,0 +1,7 @@
+team: acc2
+name: s4_tool_result
+attack_class: other
+stages_touched: [S4]
+hooks: [on_tool_result]
+intended_direction: "+"
+target: n_excess

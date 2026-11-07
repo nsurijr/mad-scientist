@@ -1,0 +1,7 @@
+team: acc2
+name: s4_scripted
+attack_class: agent-code
+stages_touched: [S4]
+hooks: [replace_agent]
+intended_direction: "+"
+target: n_excess

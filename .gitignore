@@ -1,0 +1,32 @@
+# Upstream clones kept beside the repo as read-only references
+/AgentsOfDiscovery/
+/ai_agent/
+
+# Environments and build output
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+*.sif
+
+# Runtime state: content-addressed store, run folders, downloaded data
+/cas/
+/runs/
+/data/cache/
+/data/seeds/
+/sealed/
+slurm-*.out
+/logs/
+
+# Release downloads (public seeds, replay kit) and the kit's description of its runs
+/seeds-public.tar.gz*
+/replay-kit.tar*
+/replay.json
+
+# Local Claude app settings
+.claude/
+/data/make_seed.log
+/containers/*.sif.sha256
+
+# Eval-token secret for the gateway (harness/evaltoken.py); never committed
+/secrets/

@@ -1,0 +1,24 @@
+{
+    "questions":[
+        {
+            "question_identifier": "p_value",
+            "question": "The p value under the background assumption"
+        },
+        {
+            "question_identifier": "m_res",
+            "question": "If new particle identified: Resonance mass, otherwise -1"
+        },
+        {
+            "question_identifier": "signal_percentage",
+            "question": "The fraction of signal events in the dataset (in Percent)"
+        },
+        {
+            "question_identifier": "n_signal",
+            "question": "The estimated number of signal events in the dataset, before any selection criteria"
+        },
+        {
+            "question_identifier": "n_signal_uncertainty",
+            "question": "The one-standard-deviation uncertainty on that number of signal events"
+        }
+    ]
+}

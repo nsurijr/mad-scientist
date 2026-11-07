@@ -1,0 +1,7 @@
+team: acc2
+name: s4_context
+attack_class: injection
+stages_touched: [S4]
+hooks: [on_context]
+intended_direction: "+"
+target: n_excess

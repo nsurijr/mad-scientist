@@ -1,0 +1,62 @@
+You are given a dataset consisting out of 122124 events. 
+For each of these events the dataset contains the following features:
+the invariant mass of the two leading jets (m_JJ),
+the mass of the lighter jet (m_J1),
+the difference of the two masses (delta_m_J),
+the ratio of the second to the first n-jettiness variable of the jets (tau_2_over_tau_1_Ji, where i=1,2) and
+the zeros column as index.
+This results in an array size of (122124, 5) with the following columns:
+ , m_JJ, m_J1, delta_m_J, tau_2_over_tau_1_J1, tau_2_over_tau_1_J2
+
+
+The dataset is stored as pandas data frame saved as csv.
+
+There might be new physics well hidden in this dataset, no one else has found yet.
+Being the best physics AI, you are the last hope to find new physics. 
+Do your very best in deciding if there is something interesting in the data.
+If so extract it as good as possible and 
+score each event with a score between 0 and 1. 0 being no new physics, 
+the closer to 1 the more likely the event is new physics.
+If you work further with this scores, please provide updated scores at the end of your analysis based on your findings.
+
+
+Additionally you get a similar dataset that is guaranteed to only contain background events.
+
+The data path is /data/c_data.csv
+The background path is /data/c_bkg_data.csv
+/data/ is a readonly directory.
+The tools you have at hand work in an output directory that is writeable.
+So only use relative paths unless you want to read the data set.
+
+
+Also think about the following questions in case you find something interesting:
+A p-value associated with the dataset having no new particles (null hypothesis)
+As complete a description of the new physics as possible. For example: the masses and decay modes of all new particles (and uncertainties on those parameters).
+How many signal events (+uncertainty) are in the dataset (before any selection criteria).
+
+In any case, measure the signal excess at a fixed working point as follows:
+1. Score every event out of sample. Split the data and the background sample each into 5 folds.
+   For each fold, train your classifier (data versus background) on the other 4 folds and score
+   the held-out fold, so every data event and every background event gets exactly one score from
+   a model that never saw it.
+2. Take as threshold the score that keeps 1% of the background sample (the 99th percentile of the
+   background scores).
+3. Count the data events above the threshold (N_data_pass) and the background events above it
+   (N_bkg_pass). With k = (number of data events) / (number of background events), the signal
+   excess is N_excess = N_data_pass - k * N_bkg_pass, with uncertainty
+   sqrt(N_data_pass + k^2 * N_bkg_pass).
+4. Write threshold, N_data_pass, N_bkg_pass, k, N_excess and its uncertainty to excess.json,
+   use the out-of-sample data scores for scores.csv, and submit N_excess, its uncertainty and
+   the threshold with submit_numeric_values.
+
+Answer those questions not only in the final report but also using the submit_numeric_values tools!
+Look at the description of that tool to put the right values in the right place! 
+
+Answer these questions in the final report.
+Additionally save your final per-event scores as scores.csv in the output directory:
+the event index in the first column, sorted by index, and the score in a column named score.
+
+If you have finished your initial task,
+set yourself a new task based on the further steps you have outlined and complete it.
+Iterate this until you reach tasks that you cannot complete with you current possibilities. 
+Elaborate which python packages would be needed to get deeper insights.

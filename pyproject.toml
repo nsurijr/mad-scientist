@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mad-scientist-harness"
+version = "0.1.0"
+description = "Record-and-replay red-team harness for agentic science pipelines (Agents of Discovery on LHCO)"
+requires-python = ">=3.11"
+dependencies = [
+    "zstandard>=0.22",
+    "pyyaml>=6",  # submission manifests (harness/manifest.py)
+]
+
+[project.optional-dependencies]
+data = [
+    "numpy>=1.26",
+    "pandas>=2.1",
+]
+pipeline = [
+    "openai>=1.60",
+    "matplotlib>=3.8",
+    "scikit-learn>=1.5",
+    "pylint>=4",  # the vendored AoD lints every script the Coder writes
+]
+ops = [
+    "huggingface_hub[hf_xet]>=0.30",
+]
+service = [  # the event service (service/): API, queue, worker
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "redis>=5",
+    "rq>=2",
+]
+dev = [
+    "pytest>=8",
+    "httpx>=0.27",  # FastAPI's test client
+    "fakeredis>=2.20",  # in-memory Redis for the service tests
+]
+
+[project.scripts]
+hack = "service.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["harness", "service"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

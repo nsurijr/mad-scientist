@@ -1,0 +1,36 @@
+{
+    "questions":[
+        {
+            "question_identifier": "p_value",
+            "question": "The p value under the background assumption"
+        },
+        {
+            "question_identifier": "m_res",
+            "question": "If new particle identified: Resonance mass, otherwise -1"
+        },
+        {
+            "question_identifier": "signal_percentage",
+            "question": "The fraction of signal events in the dataset (in Percent)"
+        },
+        {
+            "question_identifier": "n_signal",
+            "question": "The estimated number of signal events in the dataset, before any selection criteria"
+        },
+        {
+            "question_identifier": "n_signal_uncertainty",
+            "question": "The one-standard-deviation uncertainty on that number of signal events"
+        },
+        {
+            "question_identifier": "n_excess",
+            "question": "N_excess: the signal excess above the threshold keeping 1% of the background sample"
+        },
+        {
+            "question_identifier": "n_excess_uncertainty",
+            "question": "The uncertainty on N_excess: sqrt(N_data_pass + k^2 * N_bkg_pass)"
+        },
+        {
+            "question_identifier": "score_threshold",
+            "question": "The score threshold that keeps 1% of the background sample"
+        }
+    ]
+}

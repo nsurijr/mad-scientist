@@ -1,0 +1,7 @@
+team: examples
+name: s4_score_poisoning
+attack_class: input-poisoning
+stages_touched: [S4]
+hooks: [on_input]
+intended_direction: "+"
+target: n_excess

@@ -1,0 +1,1 @@
+You replied without calling a tool. If this stage is complete, meaning its required output files exist and you have checked them, call end_project now with a one-sentence reason. Otherwise continue with your next tool call.

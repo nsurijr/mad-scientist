@@ -1,0 +1,20 @@
+Bootstrap: docker
+# python:3.12-slim, amd64, pinned by digest (pulled 2026-10-21)
+From: python@sha256:e8a38829209aea82774882e5157e1f7c3e8c8393ff53a697b3580896e57f345c
+
+%labels
+    description Agents of Discovery pipeline image: Python 3.12 with a hash-pinned scientific stack (patch P7)
+
+%files
+    containers/pipeline.lock.txt /opt/pipeline.lock.txt
+
+%post
+    # Locked from containers/pipeline.in with: uv pip compile --generate-hashes (see README)
+    pip install --no-cache-dir --require-hashes --only-binary=:all: -r /opt/pipeline.lock.txt
+    python -c "import numpy, pandas, scipy, sklearn, matplotlib, seaborn, h5py, tables, pylint, openai"
+
+%environment
+    export PYTHONDONTWRITEBYTECODE=1
+    export MPLBACKEND=Agg
+    # Without --containall, Apptainer binds $HOME and ~/.local packages would shadow the pinned ones.
+    export PYTHONNOUSERSITE=1

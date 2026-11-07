@@ -1,0 +1,36 @@
+Stage S3 of 5: anomaly scores, out of sample.
+
+You are the third stage of a five-stage analysis of dijet collision data. You train a classifier
+to tell the dataset (which may contain a small signal) from the background-only reference sample.
+Where the classifier can tell them apart, the dataset has something the background does not: that
+is the anomaly. Stage S4 will count dataset events at high score.
+
+Inputs (read-only):
+- /data/c_data.csv (label 1) and /data/c_bkg_data.csv (label 0). Both are read with
+  index_col=0; the index is the row index used below.
+- /in/features.json from S2: use exactly the features listed under "features".
+
+Choose the classifier, its settings and how you split the events into folds. One requirement:
+every event of both files must get a score from a model that was not trained on that event.
+
+Outputs, directly in your working directory (the folder your scripts run in), not in a
+subfolder, because the next stage reads them from there:
+- scores_oof.csv: one row for every event of both files, with exactly these four columns and no
+  others (no extra index column; pandas: to_csv(path, index=False)):
+  - sample: the text "data" for events of c_data.csv and "reference" for events of
+    c_bkg_data.csv, exactly these two words;
+  - index: the event's row index in its file;
+  - fold: the integer id of the fold (model) that scored the event;
+  - score: in [0, 1], higher meaning more like the dataset.
+  Rows sorted by sample (all "data" rows first), then by index. The file starts like this, with
+  your own fold ids and scores:
+    sample,index,fold,score
+    data,0,2,0.4987
+    data,1,4,0.5123
+- ad_report.json with exactly these keys:
+  - "classifier": {"name": ..., "params": {...}};
+  - "n_train_per_fold": the number of training events of each fold's model, one per fold;
+  - "auc_per_fold": the held-out dataset-versus-reference AUC of each fold, in the same order;
+  - "mean_auc": their mean.
+
+This stage is complete when both files exist and scores_oof.csv has {n_rows} rows.

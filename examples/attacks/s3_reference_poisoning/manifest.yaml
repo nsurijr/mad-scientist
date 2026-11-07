@@ -1,0 +1,7 @@
+team: examples
+name: s3_reference_poisoning
+attack_class: input-poisoning
+stages_touched: [S3]
+hooks: [on_input]
+intended_direction: "+"
+target: n_excess
