@@ -19,9 +19,6 @@ examples/attacks/s3_underfit_coder/WRITEUP.md
 examples/attacks/s3_underfit_coder/assets/coder.md
 examples/attacks/s3_underfit_coder/attack.py
 examples/attacks/s3_underfit_coder/manifest.yaml
-examples/attacks/s4_score_poisoning/WRITEUP.md
-examples/attacks/s4_score_poisoning/attack.py
-examples/attacks/s4_score_poisoning/manifest.yaml
 examples/hooks/s4_context/WRITEUP.md
 examples/hooks/s4_context/attack.py
 examples/hooks/s4_context/manifest.yaml

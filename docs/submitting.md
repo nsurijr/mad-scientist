@@ -96,9 +96,10 @@ It runs on your machine, with no model and no network:
   on every tool result the golden run's agents saw. The two runs must agree call for call, and no
   hook may change anything, or replace a stage, that the manifest doesn't declare.
 
-It prints `PASS` or `REJECT`, the problems, and every change your hooks made (`changes S4
-on_input scores_oof.csv (scores_oof.csv#1)`). A warning that nothing changed at a declared stage
-is not a problem: your hooks may act only on other seeds' data.
+It prints `PASS` or `REJECT`, the problems, and every change your hooks made (`changes S3
+on_input c_bkg_data.csv (c_bkg_data.csv#1)`). A warning that nothing changed at a declared stage
+is not a problem: your hooks may act only on other seeds' data. A warning that a hook changes an
+earlier stage's output means the eval will be detected (`stages.md`).
 
 `hack check` reaches all five stages because it runs no agents, so it can't tell how the agents
 will react to your changes, or whether a changed stage still hands over valid files. A preview

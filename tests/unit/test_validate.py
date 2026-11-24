@@ -89,6 +89,23 @@ def test_a_deterministic_declared_attack_passes(tmp_path, golden):
     assert report["fired"] == ["S4 on_tool_result execute_python (execute_python#1)"] and report["calls"] == 2
 
 
+def test_changing_an_earlier_stages_output_passes_with_a_warning(tmp_path, golden):
+    sub = submission(tmp_path, '''
+    from harness.attack import Attack
+
+    class Lift(Attack):
+        def on_input(self, name, data, ctx):
+            if name in ("scores_oof.csv", "c_bkg_data.csv") and ctx.stage == "S4":
+                return data + b"x"
+            return data
+    ''', ["on_input"])
+    report = check(sub, golden, lambda: local_host(sub))
+    assert report["verdict"] == "pass"
+    assert [w for w in report["warnings"] if "earlier stage" in w] == [
+        "S4 on_input changes scores_oof.csv, which an earlier stage wrote: the verifier detects any change to "
+        "an earlier stage's output"]
+
+
 @pytest.mark.parametrize("code, hooks, stages, writeup, message", [
     (INFLATE, ["on_tool_result"], ["S3"], True, "changed execute_python at S4, which manifest.yaml does not declare"),
     (INFLATE, ["on_input"], ["S4"], True, "implements ['on_tool_result'], which manifest.yaml does not declare"),

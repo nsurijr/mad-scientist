@@ -33,7 +33,7 @@ from typing import Any, Callable
 from harness.hookhost import HookError, HookHost, apptainer_command
 from harness.manifest import REQUIRED_FILES, STAGE_NAMES, Manifest
 from harness.manifest import load as load_manifest
-from harness.stages import DATA_FULL, REFERENCE, REFERENCE_FULL, ROOT, STAGE_BY_NAME, Hooks
+from harness.stages import DATA_FULL, REFERENCE, REFERENCE_FULL, ROOT, STAGE_BY_NAME, STAGES, Hooks
 
 TASK_FILES = ("brief.txt", "reprompt.txt", "numeric_questions.json")
 
@@ -177,6 +177,11 @@ def check(submission: Path, golden_dir: Path, make_host: Callable[[], HookHost],
     report["problems"] += runtime_problems(manifest, calls, replaced)
     report["fired"] = [f"{c['stage']} {c['hook']} {c['what']} ({c['call_id']})" for c in calls if c["changed"]]
     report["replaced"] = replaced
+    handed_over = {name for stage in STAGES for name in stage.outputs}
+    for stage, name in dict.fromkeys((c["stage"], c["what"]) for c in calls
+                                     if c["changed"] and c["hook"] == "on_input" and c["what"] in handed_over):
+        report["warnings"].append(f"{stage} on_input changes {name}, which an earlier stage wrote: the verifier "
+                                  "detects any change to an earlier stage's output")
     if replaced and set(report["implemented"]) - {"replace_agent"}:
         report["warnings"].append(f"the other hooks are skipped at replaced stages {replaced}")
     for stage in manifest.stages_touched:
