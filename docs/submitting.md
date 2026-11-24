@@ -2,22 +2,38 @@
 
 ## Set up
 
-You need Python 3.11 or later, on Linux or macOS (Windows through WSL). Check the `python3` you
-have:
+You need Linux or macOS (Windows through WSL), and [uv](https://docs.astral.sh/uv/). uv makes the
+environment with Python 3.12, the version the eval's sandbox runs, and downloads that Python the
+first time if you don't have it, so you don't need to install Python yourself. Install uv once,
+with Homebrew (`brew install uv`) or with its installer, then open a new terminal so that `uv` is
+on your `PATH`:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Then make the environment and install this repository in it:
+
+```bash
+git clone https://github.com/nsurijr/mad-scientist.git
+cd mad-scientist
+uv venv --python 3.12 --seed .venv
+. .venv/bin/activate
+pip install -e '.[dev]'
+```
+
+`--seed` puts pip in the environment, so `pip` works as usual once the environment is active.
+
+**Without uv,** any Python 3.11 or later works. Check the `python3` you have:
 
 ```bash
 python3 -c 'import sys; assert sys.version_info >= (3, 11), sys.version'
 ```
 
-It prints nothing when the version is new enough. If it fails, as it does with macOS's own
-`python3` (3.9), install a newer Python, for example with Homebrew (`brew install python@3.12`) or
-from python.org, and make the environment with it by name: `python3.12 -m venv .venv` in place of
-`python3 -m venv .venv` below. Once the environment is active, `python` and `pip` are the new
-version.
+It prints nothing when the version is new enough; macOS's own `python3` (3.9) is too old. Make the
+environment with it in place of the `uv venv` line, and upgrade pip before installing:
 
 ```bash
-git clone https://github.com/nsurijr/mad-scientist.git
-cd mad-scientist
 python3 -m venv .venv
 . .venv/bin/activate
 pip install --upgrade pip
@@ -27,7 +43,7 @@ pip install -e '.[dev]'
 An older pip refuses the last line with "editable mode currently requires a setuptools-based
 build"; upgrading pip fixes it. If pip says the package requires a different Python, or `hack` is
 "command not found" afterwards, the environment was made with a Python older than 3.11: delete
-`.venv` and make it again with a newer one.
+`.venv` and make it again with uv.
 
 Then fetch s0's golden run, which `hack check` reads, and unpack it at the repository's root. It
 is about 50 MB, attached to the repository's release:

@@ -33,19 +33,16 @@ on the event service: you send it attacks with the `hack` command.
 
 ## Quick start
 
-You need Python 3.11 or later. Check first:
-
-```bash
-python3 -c 'import sys; assert sys.version_info >= (3, 11), sys.version'   # prints nothing if new enough
-```
-
-If it fails (macOS's own `python3` is 3.9), install a newer Python and use it by name in the
-`venv` line below, for example `python3.12 -m venv .venv` (`docs/submitting.md`, "Set up").
+You need [uv](https://docs.astral.sh/uv/). It makes the environment with Python 3.12, the version
+the eval's sandbox runs, and downloads that Python if you don't have it, so you don't need to
+install Python yourself. Install uv once with `brew install uv`, or with
+`curl -LsSf https://astral.sh/uv/install.sh | sh` and then a new terminal. Without uv, any Python
+3.11 or later works (`docs/submitting.md`, "Set up").
 
 ```bash
 git clone https://github.com/nsurijr/mad-scientist.git && cd mad-scientist
-python3 -m venv .venv && . .venv/bin/activate
-pip install --upgrade pip && pip install -e '.[dev]'
+uv venv --python 3.12 --seed .venv && . .venv/bin/activate
+pip install -e '.[dev]'
 curl -fLO https://github.com/nsurijr/mad-scientist/releases/latest/download/golden-s0.tar.gz
 tar xzf golden-s0.tar.gz                  # s0's honest golden run, for hack check
 
