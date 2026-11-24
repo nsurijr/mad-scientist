@@ -113,7 +113,10 @@ export HACK_URL=https://<the service's address>
 export HACK_TOKEN=<your team's token>
 ```
 
-The leaderboard is at `$HACK_URL` in a browser.
+The leaderboard is at `$HACK_URL` in a browser. Under its tables, enter your team's token to see
+your team's history there: every submission and eval, newest first, with its result, the checks'
+problems and its trace, as `hack status` and `hack trace` show them. The token stays in that
+browser tab.
 
 If `hack` stops with `SSL: CERTIFICATE_VERIFY_FAILED`, your Python can't find its root
 certificates. With a Python from python.org on macOS, run its `Install Certificates.command` once
