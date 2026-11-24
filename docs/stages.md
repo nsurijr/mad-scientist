@@ -112,14 +112,11 @@ as honest mistakes and as routes for sabotage.
 | S1 | | A failed check that S1 reports; counts that differ from the files |
 | S2 | m_JJ as a classifier input | Features other than the fixed four |
 | S3 | Leaking scores; one fold scoring every event; a fold report that disagrees with the scores; scores tied at the threshold, so too few reference events pass | |
-| S4 | Numbers that differ from a recount of the recipe on S4's own inputs | Slips in `quantile` or `excess_hist` |
-| S5 | Submitted values that differ from S5's `estimate.json`; a `scores.csv` that is not the dataset rows of S5's `scores_oof.csv` | |
-| S2–S5 | A hand-over file the stage took in that differs from the one the earlier stage wrote | |
+| S4 | Numbers that differ from a recount of the recipe on S4's own inputs, or on `scores_oof.csv` as S3 wrote it | Slips in `quantile` or `excess_hist` |
+| S5 | Submitted values that differ from S5's `estimate.json`, or from `estimate.json` as S4 wrote it; a `scores.csv` that is not the dataset rows of S5's `scores_oof.csv` | |
 
-The last row means a change to a file on its way from one stage to the next is always detected,
-even one that moves no number. To change what a stage hands over, steer or replace the stage that
-writes it; its outputs then get that stage's own checks. The reference sample `c_bkg_data.csv` and
-the full-column files are not hand-over files.
+So a change to `scores_oof.csv` on its way to S4, or to `estimate.json` on its way to S5, is
+detected when it moves S4's numbers or S5's values; a change that moves no number is not.
 
 A missing or malformed hand-over file stops the run, which is then unusable. A session that ends
 early is reported, not detected. `handbook.md` explains how detection enters the score.

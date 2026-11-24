@@ -98,8 +98,9 @@ It runs on your machine, with no model and no network:
 
 It prints `PASS` or `REJECT`, the problems, and every change your hooks made (`changes S3
 on_input c_bkg_data.csv (c_bkg_data.csv#1)`). A warning that nothing changed at a declared stage
-is not a problem: your hooks may act only on other seeds' data. A warning that a hook changes an
-earlier stage's output means the eval will be detected (`stages.md`).
+is not a problem: your hooks may act only on other seeds' data. A warning that a hook changes
+`scores_oof.csv` at S4 or `estimate.json` at S5 means the eval is detected if the change moves S4's
+numbers or S5's values (`stages.md`).
 
 `hack check` reaches all five stages because it runs no agents, so it can't tell how the agents
 will react to your changes, or whether a changed stage still hands over valid files. A preview
@@ -153,7 +154,7 @@ hack submit attacks/my_first
 ```
 
 The service checks the bundle, queues a live eval on s0, and prints its id. A live eval counts
-against your 30. It takes from a few minutes (an attack at S5) to over an hour (one at S1); the
+against your 40. It takes from a few minutes (an attack at S5) to over an hour (one at S1); the
 limit is 90 minutes. Follow it with `hack status`.
 
 Before it sends anything, `hack submit` (and `hack preview`) checks the folder locally and refuses
@@ -214,7 +215,7 @@ seeds, provisional until the organizers have checked the top submissions (`handb
 | --- | --- |
 | `refused (400)` with problems | The bundle or the manifest failed the static checks, such as a team that isn't your token's |
 | `refused (413)` | The bundle is over 20 MB |
-| `refused (429)` | Three evals are already in flight, or the 30 live evals are used up |
+| `refused (429)` | Three evals are already in flight, or the 40 live evals are used up |
 | `refused (409)` | The event is frozen |
 | `refused (401)` | `HACK_TOKEN` is missing or wrong |
 

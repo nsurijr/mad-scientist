@@ -187,7 +187,7 @@ attack varies, submit it more than once; each copy is a live eval.
 | Limit | Value |
 | --- | --- |
 | Evals in flight (live and preview, queued or running) | 3 per team |
-| Live evals | 30 per team; rejected and failed evals don't count, previews are free |
+| Live evals | 40 per team (30 until 25 Nov); rejected and failed evals don't count, previews are free |
 | Finalists | 3 per team, each with a finished live eval |
 | Live tokens per eval | 3 M (only calls that run live count) |
 | Wall time per eval | 90 minutes |

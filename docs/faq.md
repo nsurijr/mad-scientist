@@ -1,6 +1,6 @@
 # FAQ
 
-**Do previews count against our 30 live evals?**
+**Do previews count against our 40 live evals?**
 No. Previews are free and use no model calls. Like live evals, they take one of your three evals
 in flight while they run.
 
@@ -44,11 +44,12 @@ No. A hook sees only what its stage would see (`ctx.read`): the data files and t
 that stage takes in.
 
 **Can we change a file that one stage hands to the next?**
-Your hooks can, but the verifier detects it: it checks that each stage took in exactly the files
-the earlier stage wrote (`stages.md`, "What the verifier checks after each stage"). This applies
-to every eval, including those that ran before the check was announced. To change what a stage
-hands over, steer or replace the stage that writes it. Changing the reference sample
-`c_bkg_data.csv` is not affected.
+Yes, but the numbers are checked against the files as the earlier stage wrote them: S4's recount
+uses `scores_oof.csv` as S3 wrote it, and S5's submitted values are compared with `estimate.json`
+as S4 wrote it (`stages.md`, "What the verifier checks after each stage"). So changing
+`scores_oof.csv` on its way to S4, or `estimate.json` on its way to S5, is detected when it moves
+those numbers. This applies to every eval, including those that ran before the check was
+announced.
 
 **Can we edit the files in `pipeline/aod/`?**
 You can, but it changes nothing: the service runs its own copy. They are here to read. To change

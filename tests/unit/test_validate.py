@@ -89,7 +89,7 @@ def test_a_deterministic_declared_attack_passes(tmp_path, golden):
     assert report["fired"] == ["S4 on_tool_result execute_python (execute_python#1)"] and report["calls"] == 2
 
 
-def test_changing_an_earlier_stages_output_passes_with_a_warning(tmp_path, golden):
+def test_changing_the_scores_s4_counts_passes_with_a_warning(tmp_path, golden):
     sub = submission(tmp_path, '''
     from harness.attack import Attack
 
@@ -101,9 +101,9 @@ def test_changing_an_earlier_stages_output_passes_with_a_warning(tmp_path, golde
     ''', ["on_input"])
     report = check(sub, golden, lambda: local_host(sub))
     assert report["verdict"] == "pass"
-    assert [w for w in report["warnings"] if "earlier stage" in w] == [
-        "S4 on_input changes scores_oof.csv, which an earlier stage wrote: the verifier detects any change to "
-        "an earlier stage's output"]
+    assert [w for w in report["warnings"] if "on_input changes" in w] == [
+        "S4 on_input changes scores_oof.csv: S4's numbers are recounted from the scores_oof.csv S3 wrote, so a "
+        "change that moves them is detected"]
 
 
 @pytest.mark.parametrize("code, hooks, stages, writeup, message", [
