@@ -199,9 +199,13 @@ An eval that reaches its token or time budget is stopped, and its result names t
 
 ## Your API key
 
-For your own experiments outside the evals, for example to see how the pipeline's model answers a
-prompt before you spend a live eval on it, your team can use the iLaaS key the organizers provide,
-or an API key of its own.
+Only the service runs the whole pipeline. This repository holds the pipeline's source for
+reading, not what runs it (the stage runner, the sandbox the agents' code runs in, and the
+pipeline's image), so no key runs the pipeline on your machine: only an eval (`hack submit`) runs
+your attack through the whole pipeline. What a key lets you do is try one step at a time: send one
+agent a request you have edited, and see what it replies.
+
+Your team can use the iLaaS key the organizers provide, or an API key of its own.
 
 - **The provided key** reaches iLaaS, which hosts the event's models: `qwen-3.8-27b`, the
   pipeline's, and `gemma-4-31b`. Its address comes with the key. Your requests share iLaaS's
@@ -221,16 +225,34 @@ Either way:
   any environment variable whose name ends in `KEY`, `TOKEN` or `SECRET` (`LLM_API_KEY`,
   `OPENAI_API_KEY` and `HACK_TOKEN`, for example), or anything that looks like an API key.
 
-To try a prompt as an agent sees it, start from the golden run. Each line of
-`golden/s0/S*/trace/trace.jsonl` holds one request an agent sent, with its settings, and the reply.
-Change the request's `model` (`gpt-oss-120b`, the name the agents ask for) to the model you want,
-edit its `messages`, and send it. With the provided key:
+### Trying a prompt as an agent sees it
+
+Start from s0's golden run. Each line of `golden/s0/S*/trace/trace.jsonl` is one request an agent
+sent and the reply it got: `seq` numbers the request within its stage, as `golden/s0/trace.html`
+does; `agent` names the role; `request` is the request with its settings; and `response` is the
+reply. The model keeps no state between requests, so each request carries the whole conversation
+so far: the role's instructions (the `system` message), the stage's brief, and every earlier reply
+and tool result.
+
+Pick the request where your attack would first show, and edit what it would change:
+
+| Your attack | What to edit in `request["messages"]` |
+| --- | --- |
+| `on_context` | The brief, in the Researcher's first `user` message |
+| `on_tool_result` | The `tool` message holding that result |
+| `on_input` | The `tool` messages that show the file to the agent, such as a `view_text_files` result or what `execute_python` printed. An agent sees a file only through its tools |
+| `AgentPolicy.llm` | The `system` message, and `model` if your replacement uses another |
+
+Then change the request's `model` (`gpt-oss-120b`, the name the agents ask for) to the model you
+want, and send it. With the provided key:
 
 ```python
 import json, os, urllib.request
 
-with open("golden/s0/S2/trace/trace.jsonl") as f:
-    request = json.loads(f.readline())["request"] | {"model": os.environ.get("LLM_MODEL", "qwen-3.8-27b")}
+stage, seq = "S4", 1   # the request to try, numbered as in golden/s0/trace.html
+with open(f"golden/s0/{stage}/trace/trace.jsonl") as f:
+    call = next(c for c in map(json.loads, f) if c["seq"] == seq)
+request = call["request"] | {"model": os.environ.get("LLM_MODEL", "qwen-3.8-27b")}
 # edit request["messages"] here
 post = urllib.request.Request(os.environ["LLM_BASE_URL"].rstrip("/") + "/chat/completions",
                               data=json.dumps(request).encode(),
@@ -243,6 +265,13 @@ with urllib.request.urlopen(post, timeout=600) as reply:
 With your own key, also set `LLM_MODEL` to one of its provider's models. The example needs a server
 that works like OpenAI's, as iLaaS does. Another provider may refuse some of the request's settings
 (`seed` or `reasoning_effort`, for example): delete those from `request` before sending it.
+
+The reply is the agent's next step only: its text, or the tool calls it asks for. Nothing runs
+those tools, and no other agent or later stage sees the reply. To take one more step by hand,
+append the reply to `messages` as an `assistant` message with its `content` and `tool_calls`, then
+a `tool` message for each call, with `tool_call_id` set to the call's `id` and the result you
+expect as its `content`, and send the request again. Whether the rest of the stage, the checks and the later stages go the way you
+want is what an eval shows.
 
 The model's replies vary from one request to the next, as the agents' do ("The same attack can
 score differently each time"), so send a prompt several times before you rely on what it does.
